@@ -1,5 +1,5 @@
 - name: remote_docker
-  hosts: docker
+  hosts: all
   become: true
 
   tasks:
@@ -28,6 +28,10 @@
       delay: 5
       register: result
       until: result is not failed
+
+    - name: Install Docker and compose for Python
+      pip:
+        name: "docker"
 
     - name: Ensure Docker service is up
       service:
