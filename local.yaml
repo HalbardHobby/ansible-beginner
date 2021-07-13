@@ -5,6 +5,10 @@
     - name: Install required system packages
       apt: name={{ item }} state=latest update_cache=yes
       loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+      retries: 3
+      delay: 5
+      register: result
+      until: result is not failed
 
     - name: Add Docker GPG apt Key
       apt_key:
@@ -27,3 +31,14 @@
     - name: Install Docker Module for Python
       pip:
         name: docker
+
+    - name: Ensure Docker service is up
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: clone git repository
+      ansible.builtin.git:
+        repo: 'https://github.globant.com/alejandro-espinosa/DevOps-bookie.git'
+        dest: ~/app
