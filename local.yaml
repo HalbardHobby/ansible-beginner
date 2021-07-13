@@ -28,9 +28,11 @@
       register: result
       until: result is not failed
 
-    - name: Install Docker Module for Python
+    - name: Install Docker and compose for Python
       pip:
-        name: docker
+        name:
+          - docker
+          - docker-compose
 
     - name: Ensure Docker service is up
       service:
@@ -38,7 +40,10 @@
         state: started
         enabled: yes
 
-    - name: clone git repository
+    - name: Clone git repository
       ansible.builtin.git:
         repo: 'https://github.globant.com/alejandro-espinosa/DevOps-bookie.git'
         dest: ~/app
+
+    - name: Start service with compose
+      raw: cd ~/app && docker-compose up
