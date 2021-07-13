@@ -18,7 +18,7 @@ resource "aws_default_subnet" "default_az" {
 
 resource "aws_key_pair" "ssh_key" {
   key_name = "ssh_key"
-  public_key = var.public_key
+  public_key = file("${var.public_key_path}")
 }
 
 resource "aws_instance" "ec2_instance" {
@@ -36,10 +36,10 @@ resource "aws_instance" "ec2_instance" {
       type        = "ssh"
       user        = "ubuntu"
       private_key = "${file("${var.private_key_path}")}"
-      host        = "${aws_instance.ec2_instance.public_ip}"
+      host        = "${aws_instance.ec2_instance.public_dns}"
     }
   }
   provisioner "local-exec" {
-    command = "ansible-playbook -i '${aws_instance.ec2_instance.public_ip},' --private-key ${var.private_key_path} ../ec2.yaml"
+    command = "ansible-playbook -i '${aws_instance.ec2_instance.public_dns},' --private-key ${var.private_key_path} ../ec2.yaml"
   }
 }
