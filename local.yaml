@@ -20,7 +20,9 @@
       apt: name={{ item }} state=latest update_cache=yes
       loop: [ 'docker-ce', 'docker-ce-cli', 'containerd.io']
       retries: 3
-      delay: 3
+      delay: 5
+      register: result
+      until: result is not failed
 
     - name: Install Docker Module for Python
       pip:
