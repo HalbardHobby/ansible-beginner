@@ -46,4 +46,4 @@
         dest: ~/app
 
     - name: Start service with compose
-      raw: cd ~/app && docker-compose up
+      raw: cd ~/app && docker-compose up -d
